@@ -8,6 +8,7 @@ import {
     Plus,
     Edit,
     Trash,
+    Loader2,
     X,
     LogOut,
     Home,
@@ -82,10 +83,12 @@ const UserManagement = ({ users = [], currentUserId }) => {
                 `/dashboard/admin/user-management/${userForm.id}`,
                 dataToSend,
                 {
+                    onStart: () => setLoading(true),
                     onSuccess: () => {
                         setShowUserModal(false);
-                        Inertia.reload(); // ⬅ reload semua props dari server
+                        Inertia.reload({ only: ["users"] });
                     },
+                    onFinish: () => setLoading(false),
                 }
             );
         } else {
@@ -466,12 +469,25 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                         Batal
                                     </button>
                                     <button
-                                        className="flex-1 py-3 bg-[#1A6291] text-white rounded-lg font-semibold hover:bg-[#134b73] transition-colors shadow-md"
+                                        className={`flex-1 py-3 rounded-lg font-semibold transition-colors shadow-md flex items-center justify-center
+        ${
+            loading
+                ? "bg-[#134b73] cursor-not-allowed opacity-60"
+                : "bg-[#1A6291] hover:bg-[#134b73] text-white"
+        }`}
                                         onClick={saveUser}
+                                        disabled={loading}
                                     >
-                                        {userForm.id
-                                            ? "Simpan Perubahan"
-                                            : "Tambah Pengguna"}
+                                        {loading ? (
+                                            <>
+                                                <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                                                Memproses...
+                                            </>
+                                        ) : userForm.id ? (
+                                            "Simpan Perubahan"
+                                        ) : (
+                                            "Tambah Pengguna"
+                                        )}
                                     </button>
                                 </div>
                             </div>
