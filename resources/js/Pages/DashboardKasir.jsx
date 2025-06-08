@@ -1,19 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
-import { AlertTriangle, Bell, Home, User, Clock } from "lucide-react";
+import { AlertTriangle, Bell, Package, Clock, User } from "lucide-react";
+
 import { LogOut } from "lucide-react";
 import Sidebar from "../components/Sidebar"; // Impor Sidebar
 
 const DashboardKasir = ({ lowStockItems, expiringItems }) => {
     console.log("Low Stock Items:", lowStockItems); // Tambahkan ini untuk debugging
     console.log("Expiring Items:", expiringItems); // Tambahkan ini untuk debugging
+    const calculateRemainingDays = (expiry) => {
+        const today = new Date();
+        const expiryDate = new Date(expiry);
+        const diffTime = expiryDate - today;
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+        return Math.floor(diffDays); // atau pakai Math.round
+    };
+    const enrichedExpiringItems = (expiringItems || []).map((item) => ({
+        ...item,
+        remainingDays: calculateRemainingDays(item.expiry),
+    }));
 
     const currentLowStockItems = (lowStockItems || []).filter(
         (item) => item.stock < item.minStock
     );
-    const currentExpiringItems = (expiringItems || []).filter(
-        (item) => item.remainingDays <= 60
-    );
+    const currentExpiringItems = (expiringItems || [])
+        .filter((item) => item.remainingDays <= 60)
+        .sort((a, b) => b.remainingDays - a.remainingDays);
+    const expiredItems = enrichedExpiringItems
+        .filter((item) => item.remainingDays < 0)
+        .sort((a, b) => a.remainingDays - b.remainingDays);
+
+    const upcomingExpiringItems = enrichedExpiringItems
+        .filter((item) => item.remainingDays >= 0 && item.remainingDays <= 60)
+        .sort((a, b) => a.remainingDays - b.remainingDays);
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeMenu, setActiveMenu] = useState("dashboard");
@@ -93,63 +112,59 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
                     </div>
 
                     {/* Quick Stats */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Status Sistem
-                                    </p>
-                                    <h3 className="text-xl font-bold text-green-600">
-                                        Online
-                                    </h3>
-                                    <p className="text-xs text-gray-400 mt-1">
-                                        Semua sistem berjalan normal
-                                    </p>
-                                </div>
-                                <div className="bg-green-100 p-3 rounded-lg">
-                                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        {" "}
+                        {/* Stok Menipis */}
+                        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                             <div className="flex justify-between items-start">
                                 <div>
                                     <p className="text-sm text-gray-500 mb-1">
                                         Stok Menipis
                                     </p>
-                                    <h3 className="text-2xl font-bold text-yellow-600">
+                                    <h3 className="text-2xl font-bold text-gray-800">
                                         {currentLowStockItems.length}
                                     </h3>
-                                    <p className="text-xs text-gray-400 mt-1">
-                                        Item perlu restok
-                                    </p>
                                 </div>
-                                <div className="bg-yellow-100 p-3 rounded-lg">
-                                    <AlertTriangle
-                                        className="text-yellow-500"
+                                <div className="bg-orange-100 p-2 rounded-md">
+                                    <Package
+                                        className="text-orange-500"
                                         size={24}
                                     />
                                 </div>
                             </div>
                         </div>
-
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                        {/* Obat Kedaluwarsa */}
+                        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                             <div className="flex justify-between items-start">
                                 <div>
                                     <p className="text-sm text-gray-500 mb-1">
-                                        Mendekati Kedaluwarsa
+                                        Obat Kadaluarsa
                                     </p>
-                                    <h3 className="text-2xl font-bold text-red-600">
-                                        {currentExpiringItems.length}
+                                    <h3 className="text-2xl font-bold text-gray-800">
+                                        {expiredItems.length}
                                     </h3>
-                                    <p className="text-xs text-gray-400 mt-1">
-                                        Dalam 60 hari ke depan
-                                    </p>
                                 </div>
-                                <div className="bg-red-100 p-3 rounded-lg">
+                                <div className="bg-red-100 p-2 rounded-md">
                                     <Bell className="text-red-500" size={24} />
+                                </div>
+                            </div>
+                        </div>
+                        {/* Akan Kadaluarsa */}
+                        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <p className="text-sm text-gray-500 mb-1">
+                                        Akan Kadaluarsa (≤60 hari)
+                                    </p>
+                                    <h3 className="text-2xl font-bold text-gray-800">
+                                        {upcomingExpiringItems.length}
+                                    </h3>
+                                </div>
+                                <div className="bg-yellow-100 p-2 rounded-md">
+                                    <AlertTriangle
+                                        className="text-yellow-500"
+                                        size={24}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -200,44 +215,93 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
                         </div>
 
                         {/* Expiring Soon */}
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <div className="mb-6">
-                                <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold text-gray-800">
-                                        Mendekati Kedaluwarsa
-                                    </h2>
-                                    <span className="text-sm bg-red-100 text-red-800 px-2 py-1 rounded-full">
-                                        {currentExpiringItems.length} item
-                                    </span>
-                                </div>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    Obat yang akan kedaluwarsa dalam 60 hari
-                                </p>
+                        <div className="bg-white p-4 rounded-lg shadow-sm">
+                            <div className="mb-4">
+                                <h2 className="text-lg font-medium text-gray-800">
+                                    Obat Kedaluwarsa
+                                </h2>
                             </div>
-                            <div className="space-y-3 max-h-96 overflow-y-auto">
-                                {currentExpiringItems.map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50 to-amber-50 border-l-4 border-yellow-400 rounded-lg hover:shadow-sm transition-shadow"
-                                    >
-                                        <div className="flex-1">
-                                            <div className="font-medium text-gray-800">
-                                                {item.name}
+
+                            {/* Sudah Kadaluarsa */}
+                            <div className="mb-2">
+                                <h3 className="text-sm font-semibold text-red-600 mb-2">
+                                    Sudah Kadaluarsa
+                                </h3>
+                                <div className="space-y-3 max-h-48 overflow-y-auto">
+                                    {expiredItems.length === 0 && (
+                                        <p className="text-sm text-gray-500">
+                                            Tidak ada obat yang sudah
+                                            kadaluarsa.
+                                        </p>
+                                    )}
+                                    {expiredItems.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex items-center justify-between p-3 bg-red-50 border-l-4 border-red-600 rounded"
+                                        >
+                                            <div>
+                                                <div className="font-medium text-gray-800">
+                                                    {item.name}
+                                                </div>
+                                                <div className="text-sm text-gray-600">
+                                                    Kedaluwarsa:{" "}
+                                                    <span className="font-medium text-red-600">
+                                                        {item.expiry}
+                                                    </span>{" "}
+                                                    ( kadaluarsa{" "}
+                                                    {Math.abs(
+                                                        item.remainingDays
+                                                    )}{" "}
+                                                    hari lalu)
+                                                </div>
                                             </div>
-                                            <div className="text-sm text-gray-600 mt-1">
-                                                Kedaluwarsa:{" "}
-                                                <span className="font-semibold text-amber-600">
-                                                    {item.expiry}
-                                                </span>
-                                                <span className="text-gray-500">
-                                                    {" "}
-                                                    ({item.remainingDays} hari
-                                                    lagi)
-                                                </span>
+                                            <div className="text-sm text-red-600 font-medium">
+                                                Segera tarik
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Akan Kadaluarsa */}
+                            <div className="mt-6">
+                                <h3 className="text-sm font-semibold text-yellow-600 mb-2">
+                                    Akan Kadaluarsa (≤ 60 hari)
+                                </h3>
+                                <div className="space-y-3 max-h-48 overflow-y-auto">
+                                    {upcomingExpiringItems.length === 0 && (
+                                        <p className="text-sm text-gray-500">
+                                            Tidak ada obat yang mendekati
+                                            kadaluarsa.
+                                        </p>
+                                    )}
+                                    {upcomingExpiringItems.map(
+                                        (item, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex items-center justify-between p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded"
+                                            >
+                                                <div>
+                                                    <div className="font-medium text-gray-800">
+                                                        {item.name}
+                                                    </div>
+                                                    <div className="text-sm text-gray-600">
+                                                        Kedaluwarsa:{" "}
+                                                        <span className="font-medium text-yellow-600">
+                                                            {item.expiry}
+                                                        </span>{" "}
+                                                        ( kadaluarsa{" "}
+                                                        {item.remainingDays}{" "}
+                                                        hari lagi)
+                                                    </div>
+                                                </div>
+                                                <div className="text-sm text-yellow-600 font-medium">
+                                                    Segera jual
+                                                </div>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -15,6 +15,8 @@ import {
     Package,
     FileText,
 } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserManagement = ({ users = [], currentUserId }) => {
     const [filteredUsers, setFilteredUsers] = useState(users);
@@ -24,6 +26,9 @@ const UserManagement = ({ users = [], currentUserId }) => {
     const [activeMenu, setActiveMenu] = useState("users");
     const [searchTerm, setSearchTerm] = useState("");
     const [showUserModal, setShowUserModal] = useState(false);
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+
     const [userForm, setUserForm] = useState({
         id: null,
         name: "",
@@ -79,24 +84,34 @@ const UserManagement = ({ users = [], currentUserId }) => {
         }
 
         if (userForm.id) {
+            // EDIT
             Inertia.put(
                 `/dashboard/admin/user-management/${userForm.id}`,
                 dataToSend,
                 {
                     onStart: () => setLoading(true),
                     onSuccess: () => {
+                        toast.success("Pengguna berhasil diperbarui!");
                         setShowUserModal(false);
                         Inertia.reload({ only: ["users"] });
+                    },
+                    onError: () => {
+                        toast.error("Gagal memperbarui pengguna.");
                     },
                     onFinish: () => setLoading(false),
                 }
             );
         } else {
+            // TAMBAH
             Inertia.post("/dashboard/admin/user-management", dataToSend, {
                 onStart: () => setLoading(true),
                 onSuccess: () => {
+                    toast.success("Pengguna berhasil ditambahkan!");
                     setShowUserModal(false);
-                    Inertia.reload({ only: ["users"] }); // Hanya ambil ulang data users
+                    Inertia.reload({ only: ["users"] });
+                },
+                onError: () => {
+                    toast.error("Gagal menambahkan pengguna.");
                 },
                 onFinish: () => setLoading(false),
             });
@@ -116,9 +131,26 @@ const UserManagement = ({ users = [], currentUserId }) => {
     };
 
     // Delete user
-    const deleteUser = (userId) => {
-        if (confirm("Yakin ingin menghapus pengguna ini?")) {
-            Inertia.delete(`/dashboard/admin/user-management/${userId}`);
+    const deleteUser = (user) => {
+        setSelectedUser(user);
+        setShowConfirmDelete(true);
+    };
+
+    const confirmDelete = () => {
+        if (selectedUser) {
+            Inertia.delete(
+                `/dashboard/admin/user-management/${selectedUser.id}`,
+                {
+                    onSuccess: () => {
+                        toast.success("Pengguna berhasil dihapus!");
+                        setShowConfirmDelete(false);
+                    },
+                    onError: () => {
+                        toast.error("Gagal menghapus pengguna.");
+                        setShowConfirmDelete(false);
+                    },
+                }
+            );
         }
     };
 
@@ -326,7 +358,7 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                                     <button
                                                         className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
                                                         onClick={() =>
-                                                            deleteUser(user.id)
+                                                            deleteUser(user)
                                                         }
                                                         title="Hapus pengguna"
                                                     >
@@ -495,6 +527,31 @@ const UserManagement = ({ users = [], currentUserId }) => {
                     </div>
                 )}
             </div>
+            {showConfirmDelete && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
+                        <h2 className="text-lg font-semibold mb-4 text-center text-gray-800">
+                            Yakin ingin menghapus pengguna ini?
+                        </h2>
+                        <div className="flex justify-center gap-4">
+                            <button
+                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                                onClick={confirmDelete}
+                            >
+                                Ya, Hapus
+                            </button>
+                            <button
+                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                                onClick={() => setShowConfirmDelete(false)}
+                            >
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <ToastContainer position="top-right" autoClose={3000} />
         </div>
     );
 };

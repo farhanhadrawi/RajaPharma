@@ -26,11 +26,11 @@ Route::get('/', [AppController::class, 'landing'])->name('landing');
 Route::get('/login', [AppController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-// Logout (API style)
-Route::post('/logout', function () {
-    Auth::logout();
-    return response()->json(['message' => 'Successfully logged out']);
+// Logout ()
+Route::middleware(['web'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
 
 // Tes route
 Route::get('/test', [AppController::class, 'test'])->name('test');

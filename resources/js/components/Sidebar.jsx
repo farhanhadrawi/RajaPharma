@@ -11,16 +11,21 @@ import {
 import { InertiaLink } from "@inertiajs/inertia-react";
 import { Inertia } from "@inertiajs/inertia";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
-const handleLogout = async () => {
-    try {
-        const response = await axios.post("/logout");
-        if (response.data.message === "Successfully logged out") {
-            Inertia.get(route("login"));
+const handleLogout = () => {
+    Inertia.post(
+        route("logout"),
+        {},
+        {
+            onError: (errors) => {
+                console.error("Logout failed", errors);
+                toast.error("Terjadi kesalahan saat logout.");
+            },
         }
-    } catch (error) {
-        console.error("Logout failed", error);
-    }
+    );
 };
 
 const Sidebar = ({
@@ -148,17 +153,17 @@ const Sidebar = ({
 
             {/* Footer - Logout */}
             <div className="mt-auto mb-4">
-                <InertiaLink
-                    href="#"
+                <button
                     onClick={handleLogout}
-                    className="px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer"
+                    className="w-full text-left px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer"
                 >
                     <div className="w-8 flex justify-center">
                         <LogOut size={20} />
                     </div>
                     {sidebarOpen && <span className="ml-3">Keluar</span>}
-                </InertiaLink>
+                </button>
             </div>
+            <ToastContainer position="top-right" autoClose={5000} />
         </div>
     );
 };

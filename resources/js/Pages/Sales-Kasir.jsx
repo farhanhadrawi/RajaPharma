@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 import { usePage } from "@inertiajs/inertia-react";
 // Mapping field dari backend Laravel ke field yang dipakai di frontend
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SalesPage = ({ products = [] }) => {
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -152,11 +154,11 @@ const SalesPage = ({ products = [] }) => {
                     setShowSummary(true);
                     setTransactionComplete(true);
                     setShowPaymentModal(false);
+                    toast.success("Transaksi berhasil diproses!");
                 }
-                // 🔒 Tutup modal setelah berhasil
             },
             onError: (errors) => {
-                alert("Gagal memproses transaksi");
+                toast.error("Gagal memproses transaksi.");
                 console.error(errors);
             },
         });
@@ -187,6 +189,7 @@ const SalesPage = ({ products = [] }) => {
                 setActiveMenu={setActiveMenu}
                 role="kasir"
             />
+            <ToastContainer position="top-right" autoClose={3000} />
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">

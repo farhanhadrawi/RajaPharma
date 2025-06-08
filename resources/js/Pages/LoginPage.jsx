@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios"; // pastikan axios sudah di-install
 import obat from "../assets/obat.png";
 import { Inertia } from "@inertiajs/inertia";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage = ({ onNavigateToHome }) => {
     const [selectedRole, setSelectedRole] = useState(""); // untuk role admin atau kasir
@@ -16,18 +18,37 @@ const LoginPage = ({ onNavigateToHome }) => {
 
         try {
             const response = await axios.post("/login", {
-                username: username,
-                password: password,
+                username,
+                password,
             });
 
             if (response.data.status === "success") {
-                Inertia.get(route("dashboard_" + selectedRole)); // Redirect berdasarkan role
+                Inertia.get(
+                    route("dashboard_" + selectedRole),
+                    {},
+                    {
+                        preserveState: true,
+                        preserveScroll: true,
+                        replace: true,
+                        onFinish: () => {
+                            toast.success(response.data.message);
+                        },
+                    }
+                );
             } else {
-                setErrorMessage(response.data.message); // Tampilkan pesan error jika login gagal
+                toast.error(response.data.message); // ✅ tampil sebagai notifikasi
+                setErrorMessage(""); // opsional: kosongkan jika tidak mau tampil di bawah form juga
             }
         } catch (error) {
-            console.error("Login failed", error);
-            setErrorMessage("Login failed. Please try again."); // Tampilkan error jika terjadi kesalahan
+            if (
+                error.response &&
+                error.response.data &&
+                error.response.data.message
+            ) {
+                setErrorMessage(error.response.data.message);
+            } else {
+                setErrorMessage("Terjadi kesalahan. Silakan coba lagi.");
+            }
         }
     };
 
@@ -187,7 +208,7 @@ const LoginPage = ({ onNavigateToHome }) => {
                         {/* Back to Home */}
                         <div className="mt-2 text-center">
                             <button
-                                onClick={() => Inertia.get(route("index"))}
+                                onClick={() => Inertia.get(route("landing"))}
                                 className="text-[#134b73] hover:underline text-sm"
                             >
                                 Back to Home
@@ -196,6 +217,7 @@ const LoginPage = ({ onNavigateToHome }) => {
                     </div>
                 </div>
             </div>
+            <ToastContainer position="top-right" autoClose={5000} />
         </div>
     );
 };

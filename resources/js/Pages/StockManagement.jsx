@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
 import Sidebar from "../components/Sidebar"; // Impor Sidebar
 import { Search, Plus, Filter, Edit, Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 // Menampilkan data dari database
 const StockManagement = ({ medications }) => {
@@ -78,9 +79,41 @@ const StockManagement = ({ medications }) => {
 
     const confirmDelete = () => {
         if (currentMedication) {
-            Inertia.delete(route("delete_medication", currentMedication.id));
-            setShowConfirmDelete(false);
+            Inertia.delete(route("delete_medication", currentMedication.id), {
+                onSuccess: () => {
+                    toast.success("Obat berhasil dihapus!");
+                    setShowConfirmDelete(false);
+                },
+                onError: () => {
+                    toast.error("Gagal menghapus obat.");
+                },
+            });
         }
+    };
+    const validateForm = () => {
+        const errors = [];
+
+        if (!formData.name.trim()) errors.push("Nama obat wajib diisi.");
+        if (
+            formData.category === "" ||
+            (formData.category === "new" && !customCategory.trim())
+        )
+            errors.push("Kategori wajib diisi.");
+        if (!formData.stock || isNaN(formData.stock) || formData.stock < 0)
+            errors.push("Stok wajib diisi dengan angka >= 0.");
+        if (
+            !formData.minStock ||
+            isNaN(formData.minStock) ||
+            formData.minStock < 0
+        )
+            errors.push("Stok minimum wajib diisi dengan angka >= 0.");
+        if (!formData.price || isNaN(formData.price) || formData.price < 0)
+            errors.push("Harga wajib diisi dengan angka >= 0.");
+        if (!formData.expiryDate)
+            errors.push("Tanggal kedaluwarsa wajib diisi.");
+        if (!formData.supplier.trim()) errors.push("Supplier wajib diisi.");
+
+        return errors;
     };
 
     const handleFormChange = (e) => {
@@ -91,20 +124,27 @@ const StockManagement = ({ medications }) => {
         }));
     };
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handleSubmit = () => {
+        const errors = validateForm();
+        if (errors.length > 0) {
+            errors.forEach((err) => toast.error(err));
+            return;
+        }
+
         setIsSubmitting(true);
 
         const medicationData = {
-            name: formData.name,
+            name: formData.name.trim(),
             category:
                 formData.category === "new"
-                    ? customCategory
+                    ? customCategory.trim()
                     : formData.category,
             stock: parseInt(formData.stock),
             minStock: parseInt(formData.minStock),
             price: parseInt(formData.price),
             expiryDate: formData.expiryDate,
-            supplier: formData.supplier,
+            supplier: formData.supplier.trim(),
         };
 
         const method = currentMedication ? "put" : "post";
@@ -119,6 +159,12 @@ const StockManagement = ({ medications }) => {
             onSuccess: () => {
                 setShowAddModal(false);
                 setCurrentMedication(null);
+                toast.success(
+                    currentMedication ? "Obat diperbarui!" : "Obat ditambahkan!"
+                );
+            },
+            onError: () => {
+                toast.error("Gagal menyimpan obat.");
             },
             onFinish: () => {
                 setIsSubmitting(false);
@@ -184,6 +230,7 @@ const StockManagement = ({ medications }) => {
                             <button
                                 className="flex items-center justify-center bg-[#1A6291] text-white px-4 py-2 rounded-lg hover:bg-[#134b73] w-full md:w-auto"
                                 onClick={handleAddMedication}
+                                disabled={isSubmitting}
                             >
                                 <Plus size={18} className="mr-2" />
                                 Tambah Obat
@@ -253,6 +300,9 @@ const StockManagement = ({ medications }) => {
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-center">
                                                         <button
+                                                            disabled={
+                                                                isSubmitting
+                                                            }
                                                             onClick={() =>
                                                                 handleEditMedication(
                                                                     medication
@@ -262,6 +312,9 @@ const StockManagement = ({ medications }) => {
                                                             <Edit size={16} />
                                                         </button>
                                                         <button
+                                                            disabled={
+                                                                isSubmitting
+                                                            }
                                                             onClick={() =>
                                                                 handleDeleteMedication(
                                                                     medication
