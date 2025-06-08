@@ -15,7 +15,8 @@ class AuthController extends Controller
         // Cek apakah kredensial valid
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-        
+            $user->update(['last_login' => now()]);
+
             // Update kolom last_login
             $user->update([
                 'last_login' => now()

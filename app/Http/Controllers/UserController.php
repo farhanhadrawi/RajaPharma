@@ -18,6 +18,7 @@ class UserController extends Controller
     
         return Inertia::render('UserManagement', [
             'users' => $users,
+            'currentUserId' => auth()->id(),
         ]);
     }
 

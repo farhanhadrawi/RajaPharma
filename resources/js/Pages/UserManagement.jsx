@@ -15,7 +15,7 @@ import {
     FileText,
 } from "lucide-react";
 
-const UserManagement = ({ users = [] }) => {
+const UserManagement = ({ users = [], currentUserId }) => {
     const [filteredUsers, setFilteredUsers] = useState(users);
     const [loading, setLoading] = useState(false);
 
@@ -33,7 +33,6 @@ const UserManagement = ({ users = [] }) => {
     useEffect(() => {
         console.log("searchTerm berubah menjadi:", searchTerm);
     }, [searchTerm]);
-      
 
     // Filter users based on search term
     useEffect(() => {
@@ -58,6 +57,7 @@ const UserManagement = ({ users = [] }) => {
 
     // Save user
     const saveUser = () => {
+        console.log("saveUser terpanggil", userForm);
         if (
             !userForm.name ||
             !userForm.username ||
@@ -78,14 +78,18 @@ const UserManagement = ({ users = [] }) => {
         }
 
         if (userForm.id) {
-            Inertia.put(route("users.update", userForm.id), dataToSend, {
-                onSuccess: () => {
-                    setShowUserModal(false);
-                    Inertia.reload(); // ⬅ reload semua props dari server
-                },
-            });
+            Inertia.put(
+                `/dashboard/admin/user-management/${userForm.id}`,
+                dataToSend,
+                {
+                    onSuccess: () => {
+                        setShowUserModal(false);
+                        Inertia.reload(); // ⬅ reload semua props dari server
+                    },
+                }
+            );
         } else {
-            Inertia.post(route("users.store"), dataToSend, {
+            Inertia.post("/dashboard/admin/user-management", dataToSend, {
                 onStart: () => setLoading(true),
                 onSuccess: () => {
                     setShowUserModal(false);
@@ -111,7 +115,7 @@ const UserManagement = ({ users = [] }) => {
     // Delete user
     const deleteUser = (userId) => {
         if (confirm("Yakin ingin menghapus pengguna ini?")) {
-            Inertia.delete(route("users.destroy", userId));
+            Inertia.delete(`/dashboard/admin/user-management/${userId}`);
         }
     };
 
@@ -281,9 +285,9 @@ const UserManagement = ({ users = [] }) => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className="text-gray-600">
-                                                    {user.lastLogin
+                                                    {user.last_login
                                                         ? new Date(
-                                                              user.lastLogin
+                                                              user.last_login
                                                           ).toLocaleString(
                                                               "id-ID"
                                                           )
@@ -293,16 +297,18 @@ const UserManagement = ({ users = [] }) => {
                                             <td className="px-6 py-4">
                                                 <span
                                                     className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                                        user.lastLogin
+                                                        user.id ===
+                                                        currentUserId
                                                             ? "bg-green-100 text-green-800 border border-green-200"
                                                             : "bg-yellow-100 text-yellow-800 border border-yellow-200"
                                                     }`}
                                                 >
-                                                    {user.lastLogin
+                                                    {user.id === currentUserId
                                                         ? "Aktif"
                                                         : "Belum Login"}
                                                 </span>
                                             </td>
+
                                             <td className="px-6 py-4">
                                                 <div className="flex justify-center space-x-2">
                                                     <button

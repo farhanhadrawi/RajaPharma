@@ -21,10 +21,10 @@ import {
     TrendingUp,
 } from "lucide-react";
 
-const Dashboard = ({ lowStockItems, expiringItems }) => {
+const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeMenu, setActiveMenu] = useState("dashboard");
-    const [stockItems, setStockItems] = useState(lowStockItems);
+    const [stockItems, setStockItems] = useState(lowStockItems || []);
     const [restockModal, setRestockModal] = useState({
         open: false,
         item: null,
@@ -88,7 +88,7 @@ const Dashboard = ({ lowStockItems, expiringItems }) => {
     const currentLowStockItems = stockItems.filter(
         (item) => item.stock < item.minStock
     );
-    const currentExpiringItems = expiringItems.filter(
+    const currentExpiringItems = (expiringItems || []).filter(
         (item) => item.remainingDays <= 60
     );
 
