@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "../components/Sidebar"; // Impor Sidebar
 import { Inertia } from "@inertiajs/inertia";
 // import route from "ziggy-js";
+import { usePage } from "@inertiajs/inertia-react";
 
 import {
     Menu,
@@ -38,6 +39,8 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
         setRestockModal({ open: true, item });
         setRestockAmount("");
     };
+    const { props } = usePage();
+    const user = props.auth.user;
 
     const confirmRestock = () => {
         if (restockModal.item && restockAmount && !isProcessing) {

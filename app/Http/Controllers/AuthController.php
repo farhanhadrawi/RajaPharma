@@ -9,38 +9,47 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
 
-public function login(Request $request)
-{
-    $request->validate([
-        'username' => 'required',
-        'password' => 'required|min:8',
-    ]);
-
-    $user = User::where('username', $request->username)->first();
-
-    if (!$user) {
+    public function login(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required|min:8',
+            'role' => 'required', // tambahkan validasi role dari frontend
+        ]);
+    
+        $user = User::where('username', $request->username)->first();
+    
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Username tidak ditemukan.'
+            ], 404);
+        }
+    
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Password salah.'
+            ], 401);
+        }
+    
+        if ($user->role !== $request->role) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Role tidak sesuai dengan akun.'
+            ], 403);
+        }
+    
+        Auth::login($user); // Login manual
+        $user->update(['last_login' => now()]);
+    
         return response()->json([
-            'status' => 'error',
-            'message' => 'Username tidak ditemukan.'
-        ], 404);
+            'status' => 'success',
+            'message' => 'Login berhasil!',
+            'user' => $user
+        ]);
     }
-
-    if (!Hash::check($request->password, $user->password)) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Password salah.'
-        ], 401);
-    }
-
-    Auth::login($user); // Login manual
-    $user->update(['last_login' => now()]);
-
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Login berhasil!',
-        'user' => $user
-    ]);
-}
+    
 public function logout(Request $request)
 {
     Auth::logout();

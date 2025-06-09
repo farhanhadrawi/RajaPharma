@@ -34,6 +34,7 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard-Admin', [
             'lowStockItems' => $lowStockItems,
             'expiringItems' => $expiringItems,
+            'flash' => session('message'),
         ]);
     }
 }

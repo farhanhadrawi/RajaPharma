@@ -20,6 +20,7 @@ const LoginPage = ({ onNavigateToHome }) => {
             const response = await axios.post("/login", {
                 username,
                 password,
+                role: selectedRole,
             });
 
             if (response.data.status === "success") {

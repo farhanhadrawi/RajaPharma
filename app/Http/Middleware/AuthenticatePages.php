@@ -3,18 +3,20 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthenticatePages
 {
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $openRoutes = ['landing', 'login', 'login.post'];
+        if (Auth::check()) {
+            $role = Auth::user()->role;
 
-        if (!Auth::check() && !$request->routeIs($openRoutes)) {
-            return redirect()->route('login');
+            // Redirect user sesuai role
+            return redirect()->route($role === 'admin' ? 'dashboard_admin' : 'dashboard_kasir');
         }
 
-        return $next($request);
+        return $next($request); // Lanjut ke login atau landing jika belum login
     }
 }

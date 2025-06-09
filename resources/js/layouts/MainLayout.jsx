@@ -8,9 +8,8 @@ const MainLayout = ({ children }) => {
 
     // Menampilkan flash message dari backend (opsional)
     useEffect(() => {
-        console.log("🔥 Flash toast:", props.toast); // WAJIB ADA
         if (props.toast) {
-            toast.success(props.toast);
+            toast.success(props.toast); // tampilkan toast saat ada flash
         }
     }, [props.toast]);
 

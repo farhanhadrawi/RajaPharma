@@ -11,7 +11,11 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::select('id', 'name', 'username', 'role', 'last_login')->get();
+        $users = User::select('id', 'name', 'username', 'role', 'last_login')
+    ->orderBy('role', 'asc')   // urutkan berdasarkan role (admin dulu, lalu kasir)
+    ->orderBy('id', 'asc')     // jika role sama, urutkan berdasarkan id
+    ->get();
+
     
         // Debug dulu untuk lihat datanya
         // dd($users);
@@ -35,7 +39,8 @@ class UserController extends Controller
             'name' => $request->name,
             'username' => $request->username,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role' => strtolower($request->role),
+
         ]);
     
         return redirect('/dashboard/admin/user-management')->with('success', 'User berhasil ditambahkan');
@@ -56,7 +61,8 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'username' => $request->username,
-            'role' => $request->role,
+            'role' => strtolower($request->role),
+
         ]);
 
         if ($request->filled('password')) {
