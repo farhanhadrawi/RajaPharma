@@ -15,15 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\HandleInertiaRequests::class);
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
-        ]);
-        // $middleware->prependToGroup('web', \App\Http\Middleware\Authenticate::class); // global auth
-        $middleware->alias([
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
-        ]);
-        $middleware->alias([
             'guest-only' => \App\Http\Middleware\AuthenticatePages::class,
-        ]);
-
+        ]);  
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
