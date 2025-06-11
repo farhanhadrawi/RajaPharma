@@ -165,28 +165,43 @@ const StockManagement = ({ medications }) => {
             ? route("update_medication", currentMedication.id)
             : route("add_medication");
 
-        Inertia.visit(url, {
-            method,
-            data: medicationData,
-            preserveScroll: true,
-            onSuccess: () => {
-                setShowAddModal(false);
-                setCurrentMedication(null);
-                // Only show a success toast once here
-                toast.success(
-                    currentMedication ? "Obat diperbarui!" : "Obat ditambahkan!"
-                );
-                setTimeout(() => {
-                    Inertia.reload();
-                }, 3000); // Delay reload after toast
+        Inertia.post(
+            url,
+            {
+                ...medicationData,
+                _method: method,
             },
-            onError: () => {
-                toast.error("Gagal menyimpan obat.");
-            },
-            onFinish: () => {
-                setIsSubmitting(false);
-            },
-        });
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.dismiss();
+                    toast.success(
+                        currentMedication
+                            ? "Obat berhasil diperbarui!"
+                            : "Obat diperbarui!",
+                        {
+                            autoClose: 3000, // in milliseconds
+                            toastId: `update-${currentMedication?.id}`, // optional, to avoid duplicates
+                        }
+                    );
+
+                    setTimeout(() => {
+                        toast.dismiss();
+                    }, 3000);
+
+                    setShowAddModal(false);
+                    setCurrentMedication(null);
+                },
+                onError: () => {
+                    toast.error("Gagal menyimpan obat.");
+                },
+                onFinish: () => {
+                    // the toast will be stay there if i didnt change something in the page,
+                    // but with this, it will take 3s to close the modal
+                    setIsSubmitting(false);
+                },
+            }
+        );
     };
 
     return (
@@ -197,6 +212,8 @@ const StockManagement = ({ medications }) => {
                 activeMenu={activeMenu}
                 setActiveMenu={setActiveMenu}
             />
+
+            {/* <ToastContainer position="top-right" /> */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 <header className="bg-white shadow-sm">
                     <div className="flex items-center justify-between p-4">
@@ -302,9 +319,14 @@ const StockManagement = ({ medications }) => {
                                                         {medication.stock}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        Rp{" "}
-                                                        {medication.price.toLocaleString()}
+                                                        Rp{"."}
+                                                        {parseInt(
+                                                            medication.price
+                                                        ).toLocaleString(
+                                                            "id-ID"
+                                                        )}
                                                     </td>
+
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         {new Date(
                                                             medication.expiryDate
@@ -360,7 +382,6 @@ const StockManagement = ({ medications }) => {
                         </div>
                     </div>
                 </main>
-                <ToastContainer position="top-right" autoClose={3000} />
             </div>
 
             {/* Modal for Add/Edit Medication */}

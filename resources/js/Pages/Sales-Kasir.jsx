@@ -102,14 +102,25 @@ const SalesPage = ({ products = [] }) => {
         const existingItem = cart.find((item) => item.id === product.id);
 
         if (existingItem) {
-            const updatedCart = cart.map((item) =>
-                item.id === product.id
-                    ? { ...item, quantity: item.quantity + 1 }
-                    : item
-            );
-            setCart(updatedCart);
+            // Mengecek apakah stok mencukupi untuk penambahan produk ke keranjang
+            if (existingItem.quantity < product.stock) {
+                const updatedCart = cart.map((item) =>
+                    item.id === product.id
+                        ? { ...item, quantity: item.quantity + 1 }
+                        : item
+                );
+                setCart(updatedCart);
+            } else {
+                // Jika sudah mencapai stok maksimum, beri notifikasi atau tidak tambah
+                toast.warning("Stok tidak mencukupi");
+            }
         } else {
-            setCart([...cart, { ...product, quantity: 1 }]);
+            // Mengecek jika stok mencukupi untuk produk pertama kali ditambahkan
+            if (product.stock > 0) {
+                setCart([...cart, { ...product, quantity: 1 }]);
+            } else {
+                toast.warning("Stok tidak mencukupi");
+            }
         }
     };
 
@@ -120,12 +131,21 @@ const SalesPage = ({ products = [] }) => {
 
     // Update kuantitas produk di keranjang
     const updateQuantity = (productId, newQuantity) => {
-        if (newQuantity < 1) return;
+        const product = cart.find((item) => item.id === productId);
 
-        const updatedCart = cart.map((item) =>
-            item.id === productId ? { ...item, quantity: newQuantity } : item
-        );
-        setCart(updatedCart);
+        // Ensure the new quantity doesn't exceed stock or is negative
+        if (newQuantity <= product.stock && newQuantity >= 1) {
+            const updatedCart = cart.map((item) =>
+                item.id === productId
+                    ? { ...item, quantity: newQuantity }
+                    : item
+            );
+            setCart(updatedCart);
+        } else if (newQuantity > product.stock) {
+            toast.warning("Jumlah yang diminta melebihi stok.");
+        } else if (newQuantity < 1) {
+            toast.warning("Jumlah tidak bisa kurang dari 1.");
+        }
     };
 
     // Proses pembayaran dan kirim data transaksi ke backend
@@ -464,9 +484,37 @@ const SalesPage = ({ products = [] }) => {
                                                         <Minus size={16} />
                                                     </button>
 
-                                                    <span className="w-8 text-center">
-                                                        {item.quantity}
-                                                    </span>
+                                                    {/* Editable quantity */}
+                                                    <input
+                                                        type="text"
+                                                        value={item.quantity}
+                                                        onChange={(e) => {
+                                                            // Allow the user to type in any number or clear the input
+                                                            const newQuantity =
+                                                                parseInt(
+                                                                    e.target
+                                                                        .value,
+                                                                    10
+                                                                );
+                                                            if (
+                                                                !isNaN(
+                                                                    newQuantity
+                                                                ) &&
+                                                                newQuantity >= 0
+                                                            ) {
+                                                                updateQuantity(
+                                                                    item.id,
+                                                                    newQuantity
+                                                                );
+                                                            }
+                                                        }}
+                                                        onFocus={(e) =>
+                                                            e.target.select()
+                                                        } // Optional: Select the text when input is focused
+                                                        className="w-10 text-center border rounded-md"
+                                                        min="0"
+                                                        max={item.stock}
+                                                    />
 
                                                     <button
                                                         className="p-1 rounded-full bg-gray-200 hover:bg-gray-300"

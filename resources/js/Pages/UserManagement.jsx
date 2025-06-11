@@ -284,11 +284,10 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                     {filteredUsers.map((user, index) => (
                                         <tr
                                             key={user.id}
-                                            className={`hover:bg-gray-50 transition-colors ${
-                                                index % 2 === 0
+                                            className={`hover:bg-gray-50 transition-colors ${index % 2 === 0
                                                     ? "bg-white"
                                                     : "bg-gray-25"
-                                            }`}
+                                                }`}
                                         >
                                             <td className="px-6 py-4">
                                                 <span className="font-semibold text-[#1A6291]">
@@ -310,11 +309,10 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span
-                                                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                                        user.role === "Admin"
+                                                    className={`px-3 py-1 text-xs font-semibold rounded-full ${user.role === "Admin"
                                                             ? "bg-red-100 text-red-800 border border-red-200"
                                                             : "bg-green-100 text-green-800 border border-green-200"
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {user.role}
                                                 </span>
@@ -323,21 +321,20 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                                 <span className="text-gray-600">
                                                     {user.last_login
                                                         ? new Date(
-                                                              user.last_login
-                                                          ).toLocaleString(
-                                                              "id-ID"
-                                                          )
+                                                            user.last_login
+                                                        ).toLocaleString(
+                                                            "id-ID"
+                                                        )
                                                         : "-"}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span
-                                                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                                        user.id ===
-                                                        currentUserId
+                                                    className={`px-3 py-1 text-xs font-semibold rounded-full ${user.id ===
+                                                            currentUserId
                                                             ? "bg-green-100 text-green-800 border border-green-200"
                                                             : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {user.id === currentUserId
                                                         ? "Aktif"
@@ -503,11 +500,10 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                     </button>
                                     <button
                                         className={`flex-1 py-3 rounded-lg font-semibold transition-colors shadow-md flex items-center justify-center
-        ${
-            loading
-                ? "bg-[#134b73] cursor-not-allowed opacity-60"
-                : "bg-[#1A6291] hover:bg-[#134b73] text-white"
-        }`}
+        ${loading
+                                                ? "bg-[#134b73] cursor-not-allowed opacity-60"
+                                                : "bg-[#1A6291] hover:bg-[#134b73] text-white"
+                                            }`}
                                         onClick={saveUser}
                                         disabled={loading}
                                     >
@@ -551,8 +547,6 @@ const UserManagement = ({ users = [], currentUserId }) => {
                     </div>
                 </div>
             )}
-
-            <ToastContainer position="top-right" autoClose={3000} />
         </div>
     );
 };
