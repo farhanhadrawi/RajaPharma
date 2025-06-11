@@ -40,6 +40,8 @@ const SalesPage = ({ products = [] }) => {
     const [cashAmount, setCashAmount] = useState("");
     const [showSummary, setShowSummary] = useState(false);
     const [transactionComplete, setTransactionComplete] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const [receipt, setReceipt] = useState({
         id: "",
         date: "",
@@ -157,14 +159,22 @@ const SalesPage = ({ products = [] }) => {
             return;
         }
 
+        setIsLoading(true); // Start loading
+
         const newReceipt = {
             items: cart.map((item) => ({
                 id: item.id,
                 quantity: item.quantity,
+                price: item.price,
             })),
             total,
             cash: cashValue,
+            change: cashValue - total,
+            date: new Date().toLocaleString(),
         };
+
+        // Save receipt to localStorage
+        localStorage.setItem("transactionData", JSON.stringify(newReceipt));
 
         Inertia.post("/dashboard/kasir/sales", newReceipt, {
             onSuccess: (page) => {
@@ -175,14 +185,25 @@ const SalesPage = ({ products = [] }) => {
                     setTransactionComplete(true);
                     setShowPaymentModal(false);
                     toast.success("Transaksi berhasil diproses!");
+                    setIsLoading(false); // End loading
                 }
             },
             onError: (errors) => {
                 toast.error("Gagal memproses transaksi.");
                 console.error(errors);
+                setIsLoading(false); // End loading
             },
         });
     };
+    useEffect(() => {
+        const savedTransaction = localStorage.getItem("transactionData");
+        if (savedTransaction) {
+            const transactionData = JSON.parse(savedTransaction);
+            setReceipt(transactionData);
+            setShowSummary(true);
+            setTransactionComplete(true);
+        }
+    }, []);
 
     // Memulai transaksi baru
     const startNewTransaction = () => {
@@ -190,6 +211,9 @@ const SalesPage = ({ products = [] }) => {
         setCashAmount("");
         setShowSummary(false);
         setTransactionComplete(false);
+
+        // Clear the saved transaction data from localStorage
+        localStorage.removeItem("transactionData");
     };
 
     // Format uang
@@ -209,8 +233,6 @@ const SalesPage = ({ products = [] }) => {
                 setActiveMenu={setActiveMenu}
                 role="kasir"
             />
-            <ToastContainer position="top-right" autoClose={3000} />
-
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Header */}
@@ -653,10 +675,20 @@ const SalesPage = ({ products = [] }) => {
                             </button>
                             <button
                                 className="flex-1 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 flex items-center justify-center"
-                                onClick={processPayment}
+                                onClick={processPayment} // Call the payment processing function
+                                disabled={isLoading} // Disable the button while loading
                             >
-                                <CreditCard size={20} className="mr-2" />
-                                Proses Pembayaran
+                                {isLoading ? (
+                                    <div className="animate-spin h-5 w-5 border-t-2 border-white rounded-full"></div> // Loading spinner
+                                ) : (
+                                    <>
+                                        <CreditCard
+                                            size={20}
+                                            className="mr-2"
+                                        />
+                                        Proses Pembayaran
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>
