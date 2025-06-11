@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
 import Sidebar from "../components/Sidebar"; // Impor Sidebar
 import { Search, Plus, Filter, Edit, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Menampilkan data dari database
 const StockManagement = ({ medications }) => {
@@ -79,10 +80,20 @@ const StockManagement = ({ medications }) => {
 
     const confirmDelete = () => {
         if (currentMedication) {
+            // Dismiss all previous notifications
+            toast.dismiss();
+
             Inertia.delete(route("delete_medication", currentMedication.id), {
                 onSuccess: () => {
-                    toast.success("Obat berhasil dihapus!");
+                    console.log("Obat berhasil dihapus!");
+                    toast.success("Obat berhasil dihapus!", {
+                        onClose: () => {
+                            console.log("Notification closed");
+                        },
+                        autoClose: 5000,
+                    });
                     setShowConfirmDelete(false);
+                    Inertia.reload();
                 },
                 onError: () => {
                     toast.error("Gagal menghapus obat.");
@@ -90,6 +101,7 @@ const StockManagement = ({ medications }) => {
             });
         }
     };
+
     const validateForm = () => {
         const errors = [];
 
@@ -125,6 +137,7 @@ const StockManagement = ({ medications }) => {
     };
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Inside handleSubmit
     const handleSubmit = () => {
         const errors = validateForm();
         if (errors.length > 0) {
@@ -159,9 +172,13 @@ const StockManagement = ({ medications }) => {
             onSuccess: () => {
                 setShowAddModal(false);
                 setCurrentMedication(null);
+                // Only show a success toast once here
                 toast.success(
                     currentMedication ? "Obat diperbarui!" : "Obat ditambahkan!"
                 );
+                setTimeout(() => {
+                    Inertia.reload();
+                }, 3000); // Delay reload after toast
             },
             onError: () => {
                 toast.error("Gagal menyimpan obat.");
@@ -343,6 +360,7 @@ const StockManagement = ({ medications }) => {
                         </div>
                     </div>
                 </main>
+                <ToastContainer position="top-right" autoClose={3000} />
             </div>
 
             {/* Modal for Add/Edit Medication */}

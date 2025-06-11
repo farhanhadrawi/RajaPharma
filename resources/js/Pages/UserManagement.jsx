@@ -37,7 +37,8 @@ const UserManagement = ({ users = [], currentUserId }) => {
         role: "Kasir",
     });
     useEffect(() => {
-        console.log("searchTerm berubah menjadi:", searchTerm);
+        // console.log("searchTerm berubah menjadi:", searchTerm);
+        if (showUserModal) setSearchTerm("");
     }, [searchTerm]);
 
     // Filter users based on search term
@@ -76,15 +77,15 @@ const UserManagement = ({ users = [], currentUserId }) => {
         const dataToSend = {
             name: userForm.name,
             username: userForm.username,
-            role: userForm.role,
+            role: userForm.role, // Pastikan role ada di sini
         };
 
         if (!userForm.id || userForm.password !== "") {
             dataToSend.password = userForm.password;
         }
 
+        // Jika form ID ada, maka lakukan edit
         if (userForm.id) {
-            // EDIT
             Inertia.put(
                 `/dashboard/admin/user-management/${userForm.id}`,
                 dataToSend,
@@ -102,7 +103,7 @@ const UserManagement = ({ users = [], currentUserId }) => {
                 }
             );
         } else {
-            // TAMBAH
+            // Jika tidak ada ID, maka tambah pengguna baru
             Inertia.post("/dashboard/admin/user-management", dataToSend, {
                 onStart: () => setLoading(true),
                 onSuccess: () => {
@@ -239,9 +240,9 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                     <button
                                         className="px-6 py-3 bg-[#1A6291] text-white rounded-lg hover:bg-[#134b73] flex items-center justify-center font-medium transition-colors shadow-md"
                                         onClick={() => {
+                                            setShowUserModal(true); // ⬅️ Baru tampilkan modal// ⬅️ Tampilkan modal
                                             setSearchTerm(""); // ⬅️ Reset pencarian dulu
                                             resetUserForm(); // ⬅️ Bersihkan form
-                                            setShowUserModal(true); // ⬅️ Baru tampilkan modal// ⬅️ Tampilkan modal
                                         }}
                                     >
                                         <Plus size={20} className="mr-2" />
