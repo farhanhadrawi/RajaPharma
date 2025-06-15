@@ -14,7 +14,7 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required',
             'password' => 'required|min:8',
-            'role' => 'required', // tambahkan validasi role dari frontend
+            'role' => 'required',
         ]);
     
         $user = User::where('username', $request->username)->first();
@@ -40,8 +40,14 @@ class AuthController extends Controller
             ], 403);
         }
     
-        Auth::login($user); // Login manual
-        $user->update(['last_login' => now()]);
+        // Login pengguna
+        Auth::login($user);
+    
+        // Perbarui status menjadi 'aktif' setelah login
+        $user->update([
+            'last_login' => now(),
+            'status' => 'aktif', // Update status menjadi 'aktif'
+        ]);
     
         return response()->json([
             'status' => 'success',
@@ -50,17 +56,24 @@ class AuthController extends Controller
         ]);
     }
     
-public function logout(Request $request)
+    
+    
+    public function logout(Request $request)
 {
-    Auth::logout();
+    // Perbarui status menjadi 'offline' saat logout
+    $user = Auth::user();
+    $user->update([
+        'status' => 'offline', // Update status menjadi 'offline'
+    ]);
 
+    Auth::logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();
 
     return redirect()
         ->route('login')
         ->with('toast', 'Logout berhasil!');
-        dd(session()->all());
 }
 
+    
 }

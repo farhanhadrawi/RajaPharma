@@ -39,34 +39,44 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
         setRestockModal({ open: true, item });
         setRestockAmount("");
     };
-    const { props } = usePage();
-    const user = props.auth.user;
 
+    const { props } = usePage();
+    const loginSuccessMessage = props.loginSuccessMessage;
+
+    console.log("Login Success Message from Props:", loginSuccessMessage); // Verifikasi apakah data diterima
+
+    if (loginSuccessMessage) {
+        toast.success(loginSuccessMessage); // Notifikasi berhasil
+    }
     const confirmRestock = () => {
         if (restockModal.item && restockAmount && !isProcessing) {
             setIsProcessing(true);
 
             // toast.success("Stok berhasil diperbarui!");
-            Inertia.post(`/medications/${restockModal.item.id}/restock`, {
-                amount: parseInt(restockAmount),
-                _method: "post",
-            }, {
-                preserveScroll: true,
-                onSuccess: () => {
-                    console.log("sjccess");
+            Inertia.post(
+                `/medications/${restockModal.item.id}/restock`,
+                {
+                    amount: parseInt(restockAmount),
+                    _method: "post",
+                },
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        console.log("sjccess");
 
-                    setRestockModal({ open: false, item: null });
-                    setRestockAmount("");
-                },
-                onError: () => {
-                    toast.error("Gagal memperbarui stok.");
-                    console.error("Restock error:", errors);
-                },
-                onFinish: () => {
-                    toast.success("Stok berhasil diperbarui!");
-                    setIsProcessing(false);
-                },
-            });
+                        setRestockModal({ open: false, item: null });
+                        setRestockAmount("");
+                    },
+                    onError: () => {
+                        toast.error("Gagal memperbarui stok.");
+                        console.error("Restock error:", errors);
+                    },
+                    onFinish: () => {
+                        toast.success("Stok berhasil diperbarui!");
+                        setIsProcessing(false);
+                    },
+                }
+            );
         }
     };
 
@@ -502,10 +512,11 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
                                         isProcessing
                                     }
                                     className={`flex-1 px-6 py-3 rounded-lg transition-all font-medium shadow-lg
-    ${isProcessing
-                                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
-                                            : "bg-gradient-to-r from-[#1A6291] to-[#2B7CB3] text-white hover:from-[#134b73] hover:to-[#246ba5] hover:scale-105"
-                                        }`}
+    ${
+        isProcessing
+            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+            : "bg-gradient-to-r from-[#1A6291] to-[#2B7CB3] text-white hover:from-[#134b73] hover:to-[#246ba5] hover:scale-105"
+    }`}
                                 >
                                     {isProcessing
                                         ? "Memproses..."

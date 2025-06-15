@@ -5,7 +5,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const LoginPage = ({ onNavigateToHome }) => {
+const LoginPage = () => {
     const [selectedRole, setSelectedRole] = useState(""); // untuk role admin atau kasir
     const [username, setUsername] = useState(""); // untuk username
     const [password, setPassword] = useState(""); // untuk password
@@ -17,11 +17,14 @@ const LoginPage = ({ onNavigateToHome }) => {
         e.preventDefault();
 
         try {
+            // Pastikan Anda menangkap respons dengan benar
             const response = await axios.post("/login", {
                 username,
                 password,
                 role: selectedRole,
             });
+
+            console.log("Login Response:", response); // Verifikasi apakah respons diterima
 
             if (response.data.status === "success") {
                 Inertia.get(
@@ -31,24 +34,24 @@ const LoginPage = ({ onNavigateToHome }) => {
                         preserveState: true,
                         preserveScroll: true,
                         replace: true,
-                        onFinish: () => {
-                            toast.success(response.data.message);
+                        data: {
+                            loginSuccessMessage: response.data.message, // Mengirim pesan berhasil login
                         },
                     }
                 );
             } else {
-                toast.error(response.data.message); // ✅ tampil sebagai notifikasi
-                setErrorMessage(""); // opsional: kosongkan jika tidak mau tampil di bawah form juga
+                toast.error(response.data.message); // Tampilkan error jika login gagal
             }
         } catch (error) {
+            console.error("Login error:", error); // Debug jika ada error
             if (
                 error.response &&
                 error.response.data &&
                 error.response.data.message
             ) {
-                setErrorMessage(error.response.data.message);
+                toast.error(error.response.data.message);
             } else {
-                setErrorMessage("Terjadi kesalahan. Silakan coba lagi.");
+                toast.error("Terjadi kesalahan. Silakan coba lagi.");
             }
         }
     };

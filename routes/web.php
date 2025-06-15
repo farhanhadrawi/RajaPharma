@@ -80,5 +80,8 @@ Route::middleware('auth')->group(function () {
     // ===============================
     // Tes route (opsional)
     // ===============================
-    Route::get('/test', [AppController::class, 'test'])->name('test');
+   
+
+Route::middleware('auth')->get('/current-user', [UserController::class, 'getCurrentUser']);
+
 });

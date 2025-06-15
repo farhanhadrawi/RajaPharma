@@ -347,6 +347,7 @@ const StockManagement = ({ medications }) => {
                                                                     medication
                                                                 )
                                                             }
+                                                            className="text-blue-500 hover:text-blue-700 disabled:text-gray-400"
                                                         >
                                                             <Edit size={16} />
                                                         </button>
@@ -359,6 +360,7 @@ const StockManagement = ({ medications }) => {
                                                                     medication
                                                                 )
                                                             }
+                                                            className="text-red-500 hover:text-red-700 disabled:text-gray-400"
                                                         >
                                                             <Trash2 size={16} />
                                                         </button>
@@ -493,7 +495,13 @@ const StockManagement = ({ medications }) => {
                                 <input
                                     type="number"
                                     name="price"
-                                    value={formData.price}
+                                    value={
+                                        formData.price
+                                            ? parseInt(
+                                                  formData.price
+                                              ).toLocaleString("id-ID")
+                                            : ""
+                                    }
                                     onChange={handleFormChange}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1A6291]"
                                     min="0"

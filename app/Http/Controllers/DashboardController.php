@@ -35,6 +35,7 @@ class DashboardController extends Controller
             'lowStockItems' => $lowStockItems,
             'expiringItems' => $expiringItems,
             'flash' => session('message'),
+            'user' => auth()->user()
         ]);
     }
 }

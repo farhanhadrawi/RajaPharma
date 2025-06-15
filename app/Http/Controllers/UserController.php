@@ -11,21 +11,24 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::select('id', 'name', 'username', 'role', 'last_login')
-    ->orderBy('role', 'asc')   // urutkan berdasarkan role (admin dulu, lalu kasir)
-    ->orderBy('id', 'asc')     // jika role sama, urutkan berdasarkan id
-    ->get();
-
-    
-        // Debug dulu untuk lihat datanya
-        // dd($users);
+        $users = User::select('id', 'name', 'username', 'role', 'last_login', 'status') // Tambahkan 'status' ke query
+            ->orderBy('role', 'asc')   // Urutkan berdasarkan role (admin dulu, lalu kasir)
+            ->orderBy('id', 'asc')     // Jika role sama, urutkan berdasarkan id
+            ->get();
     
         return Inertia::render('UserManagement', [
             'users' => $users,
-            'currentUserId' => auth()->id(),
+            'currentUserId' => auth()->user(), // Kirimkan seluruh data pengguna yang sedang login (bukan hanya ID)
         ]);
     }
+    
 
+    public function getCurrentUser()
+    {
+        return response()->json([
+            'currentUserId' => Auth::id(), // Mengambil ID pengguna yang sedang login
+        ]);
+    }
     public function store(Request $request)
     {
         $request->validate([

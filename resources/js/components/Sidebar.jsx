@@ -20,6 +20,21 @@ const handleLogout = () => {
         route("logout"),
         {},
         {
+            onSuccess: () => {
+                // Update status to "Offline" on the frontend
+                setFilteredUsers(
+                    filteredUsers.map((user) => {
+                        return {
+                            ...user,
+                            status: "Offline", // Explicitly setting status to "Offline"
+                        };
+                    })
+                );
+
+                // Optionally redirect to login or reset state
+                toast.success("Logout berhasil!");
+                Inertia.visit(route("login")); // Redirect to login page after logout
+            },
             onError: (errors) => {
                 console.error("Logout failed", errors);
                 toast.error("Terjadi kesalahan saat logout.");

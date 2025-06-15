@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
+import { usePage } from "@inertiajs/inertia-react";
 import { AlertTriangle, Bell, Package, Clock, User } from "lucide-react";
-
-import { LogOut } from "lucide-react";
 import Sidebar from "../components/Sidebar"; // Impor Sidebar
 
 const DashboardKasir = ({ lowStockItems, expiringItems }) => {
-    console.log("Low Stock Items:", lowStockItems); // Tambahkan ini untuk debugging
-    console.log("Expiring Items:", expiringItems); // Tambahkan ini untuk debugging
     const calculateRemainingDays = (expiry) => {
         const today = new Date();
         const expiryDate = new Date(expiry);
         const diffTime = expiryDate - today;
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
-        return Math.floor(diffDays); // atau pakai Math.round
+        return Math.floor(diffDays);
     };
     const enrichedExpiringItems = (expiringItems || []).map((item) => ({
         ...item,
@@ -55,7 +52,12 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
         };
         return today.toLocaleDateString("id-ID", options);
     };
+    const { props } = usePage();
+    const loginSuccessMessage = props.loginSuccessMessage;
 
+    if (loginSuccessMessage) {
+        toast.success(loginSuccessMessage); // Notifikasi berhasil
+    }
     return (
         <div className="flex h-screen bg-gray-50">
             {/* Sidebar */}
