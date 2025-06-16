@@ -6,12 +6,13 @@ use Inertia\Inertia;
 use App\Models\Obat;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use App\Models\User;
 class CashierDashboardController extends Controller
 {
     // Menampilkan dashboard kasir
     public function dashboard()
 {
+    $cashier = auth()->user()->username;
     $lowStockItems = Obat::whereColumn('stok', '<', 'stok_minimum')
         ->select('id', 'nama_obat', 'stok', 'stok_minimum')
         ->get()

@@ -1,4 +1,5 @@
 <?php
+// app/Models/Transaction.php
 
 namespace App\Models;
 
@@ -9,18 +10,17 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['invoice_number', 'cash','change','total_amount', 'user_id', 'created_at'];
+    protected $fillable = ['invoice_number', 'cash', 'change', 'total_amount', 'user_id', 'created_at'];
 
+    // Relasi dengan TransactionItem
+    public function items()
+    {
+        return $this->hasMany(TransactionItem::class);
+    }
 
-  // app/Models/Transaction.php
-public function items()
-{
-    return $this->hasMany(TransactionItem::class);
-}
-
+    // Relasi dengan User (Kasir)
     public function user()
-{
-    return $this->belongsTo(User::class);
-}
-
+    {
+        return $this->belongsTo(User::class);
+    }
 }

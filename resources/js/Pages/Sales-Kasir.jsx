@@ -45,17 +45,21 @@ const SalesPage = ({ products = [] }) => {
     const [receipt, setReceipt] = useState({
         id: "",
         date: "",
+        cashier: "", // Menambahkan properti cashier
         items: [],
         subtotal: 0,
         total: 0,
         cash: 0,
         change: 0,
     });
+
     console.log("Data produk dari Laravel (Inertia):", products);
+
     const { props } = usePage();
     useEffect(() => {
         if (props.receipt) {
             setReceipt(props.receipt);
+            console.log(props.receipt);
             setShowSummary(true);
             setTransactionComplete(true);
         }
@@ -245,7 +249,8 @@ const SalesPage = ({ products = [] }) => {
                             <div className="flex items-center">
                                 <div className="text-right">
                                     <div className="text-sm font-semibold text-gray-800">
-                                        Administrator RajaPharma
+                                        Kasir RajaPharma
+                                        {/* Menampilkan nama kasir */}
                                     </div>
                                 </div>
                             </div>
@@ -264,6 +269,9 @@ const SalesPage = ({ products = [] }) => {
                                 <p className="text-green-600 font-semibold">
                                     Nomor Transaksi: {receipt.id}
                                 </p>
+                                <p className="text-gray-600">
+                                    Kasir: {receipt.cashier}
+                                </p>{" "}
                                 <p className="text-gray-600">{receipt.date}</p>
                             </div>
 
@@ -296,11 +304,11 @@ const SalesPage = ({ products = [] }) => {
                                                     {item.quantity}
                                                 </td>
                                                 <td className="py-2 text-right">
-                                                    Rp{"."}
+                                                    Rp{""}
                                                     {formatCurrency(item.price)}
                                                 </td>
                                                 <td className="py-2 text-right">
-                                                    Rp{"."}
+                                                    Rp{""}
                                                     {formatCurrency(
                                                         item.price *
                                                             item.quantity
@@ -316,13 +324,13 @@ const SalesPage = ({ products = [] }) => {
                                 <div className="flex justify-between">
                                     <span className="font-medium">Total:</span>
                                     <span className="font-bold">
-                                        Rp.{formatCurrency(receipt.total)}
+                                        Rp{formatCurrency(receipt.total)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-medium">Tunai:</span>
                                     <span>
-                                        Rp.{formatCurrency(receipt.cash)}
+                                        Rp{formatCurrency(receipt.cash)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between text-green-600">
@@ -330,7 +338,7 @@ const SalesPage = ({ products = [] }) => {
                                         Kembalian:
                                     </span>
                                     <span className="font-bold">
-                                        Rp.{formatCurrency(receipt.change)}
+                                        Rp{formatCurrency(receipt.change)}
                                     </span>
                                 </div>
                             </div>
@@ -437,7 +445,7 @@ const SalesPage = ({ products = [] }) => {
 
                                         <div className="flex justify-between items-center mt-3">
                                             <span className="font-bold text-[#1A6291] text-sm">
-                                                Rp{"."}
+                                                Rp{""}
                                                 {formatCurrency(product.price)}
                                             </span>
                                             <button
@@ -488,7 +496,7 @@ const SalesPage = ({ products = [] }) => {
                                                         {item.name}
                                                     </h3>
                                                     <p className="text-sm text-gray-600">
-                                                        Rp{"."}
+                                                        Rp{""}
                                                         {formatCurrency(
                                                             item.price
                                                         )}

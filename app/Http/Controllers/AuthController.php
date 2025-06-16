@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+
 class AuthController extends Controller
 {
 
@@ -40,9 +41,13 @@ class AuthController extends Controller
             ], 403);
         }
     
+         
+        
         // Login pengguna
         Auth::login($user);
-    
+        
+    // Simpan nama kasir di session setelah login berhasil
+        session(['cashier' => $user->username]);
         // Perbarui status menjadi 'aktif' setelah login
         $user->update([
             'last_login' => now(),

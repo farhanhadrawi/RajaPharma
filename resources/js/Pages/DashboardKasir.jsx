@@ -58,6 +58,8 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
     if (loginSuccessMessage) {
         toast.success(loginSuccessMessage); // Notifikasi berhasil
     }
+
+
     return (
         <div className="flex h-screen bg-gray-50">
             {/* Sidebar */}
