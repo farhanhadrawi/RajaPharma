@@ -59,7 +59,6 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
         toast.success(loginSuccessMessage); // Notifikasi berhasil
     }
 
-
     return (
         <div className="flex h-screen bg-gray-50">
             {/* Sidebar */}
@@ -208,12 +207,12 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
                                             <div className="text-sm text-gray-600 mt-1">
                                                 Stok:{" "}
                                                 <span className="font-semibold text-red-600">
-                                                    {item.stock}
+                                                    {Number(item.stock)}
                                                 </span>{" "}
                                                 /
                                                 <span className="text-gray-500">
-                                                    {" "}
-                                                    minimum {item.minStock}
+                                                    minimum{" "}
+                                                    {Number(item.minStock)}
                                                 </span>
                                             </div>
                                         </div>
@@ -256,9 +255,11 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
                                                     <span className="font-medium text-red-600">
                                                         {item.expiry}
                                                     </span>{" "}
-                                                    ( kadaluarsa{" "}
+                                                    (kadaluarsa{" "}
                                                     {Math.abs(
-                                                        item.remainingDays
+                                                        Number(
+                                                            item.remainingDays
+                                                        )
                                                     )}{" "}
                                                     hari lalu)
                                                 </div>
@@ -298,8 +299,10 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
                                                         <span className="font-medium text-yellow-600">
                                                             {item.expiry}
                                                         </span>{" "}
-                                                        ( kadaluarsa{" "}
-                                                        {item.remainingDays}{" "}
+                                                        (kadaluarsa{" "}
+                                                        {Number(
+                                                            item.remainingDays
+                                                        )}{" "}
                                                         hari lagi)
                                                     </div>
                                                 </div>
