@@ -193,7 +193,7 @@ const UserManagement = ({ users = [], currentUserId }) => {
                 <header className="bg-white shadow-sm">
                     <div className="flex items-center justify-between p-4">
                         <h1 className="text-2xl font-bold text-gray-800">
-                            Manajemen User
+                            Manajemen Pengguna
                         </h1>
                         <div className="flex items-center">
                             <div className="flex items-center">

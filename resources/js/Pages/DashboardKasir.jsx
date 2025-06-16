@@ -17,9 +17,16 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
         remainingDays: calculateRemainingDays(item.expiry),
     }));
 
-    const currentLowStockItems = (lowStockItems || []).filter(
+    const parsedLowStockItems = (lowStockItems || []).map((item) => ({
+        ...item,
+        stock: Number(item.stock),
+        minStock: Number(item.minStock),
+    }));
+
+    const currentLowStockItems = parsedLowStockItems.filter(
         (item) => item.stock < item.minStock
     );
+
     const currentExpiringItems = (expiringItems || [])
         .filter((item) => item.remainingDays <= 60)
         .sort((a, b) => b.remainingDays - a.remainingDays);
