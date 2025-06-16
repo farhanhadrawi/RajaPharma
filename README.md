@@ -6,7 +6,6 @@ Panduan instalasi dan deployment untuk **Sistem Informasi Apotek Raja** berbasis
 
 - [Prasyarat](#prasyarat)
 - [Langkah Instalasi](#langkah-instalasi)
-- [Pengujian](#pengujian)
 - [Deployment](#deployment-ke-produksi)
 - [Troubleshooting](#troubleshooting)
 
