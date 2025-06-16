@@ -60,10 +60,11 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
                 {
                     preserveScroll: true,
                     onSuccess: () => {
-                        console.log("sjccess");
-
                         setRestockModal({ open: false, item: null });
                         setRestockAmount("");
+                        Inertia.reload({
+                            only: ["lowStockItems", "expiringItems"],
+                        });
                     },
                     onError: () => {
                         toast.error("Gagal memperbarui stok.");
@@ -137,13 +138,6 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
                 activeMenu={activeMenu}
                 setActiveMenu={setActiveMenu}
             />
-            {/* <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                closeOnClick
-                draggable
-                newestOnTop
-            /> */}
             {/* Main content */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Top navigation */}
