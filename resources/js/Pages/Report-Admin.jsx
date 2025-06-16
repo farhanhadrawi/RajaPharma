@@ -59,14 +59,18 @@ const ReportAdmin = () => {
         }, 0);
 
         const totalItems = filteredTransactions.reduce((sum, transaction) => {
+            if (!Array.isArray(transaction.items)) return sum; // Pastikan items adalah array
+
             return (
                 sum +
-                transaction.items.reduce(
-                    (itemSum, item) => itemSum + (item.quantity || 0),
-                    0
-                )
+                transaction.items.reduce((itemSum, item) => {
+                    const quantity = Number(item.quantity) || 0;
+                    console.log(`Item: ${item.name}, Quantity: ${quantity}`); // Cek nilai quantity
+                    return itemSum + quantity;
+                }, 0)
             );
         }, 0);
+        console.log("Total Items:", totalItems); // Cek hasil totalItems
 
         return {
             totalTransactions: filteredTransactions.length,
