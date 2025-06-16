@@ -2,6 +2,14 @@
 
 Panduan instalasi dan deployment untuk **Sistem Informasi Apotek Raja** berbasis **React**, **Vite**, **Inertia.js**, dan **Laravel**.
 
+## Daftar Isi
+
+-   [Prasyarat](#prasyarat)
+-   [Langkah Instalasi](#langkah-instalasi)
+-   [Pengujian](#pengujian)
+-   [Deployment](#deployment-ke-produksi)
+-   [Troubleshooting](#troubleshooting)
+
 ## Prasyarat
 
 Sebelum memulai instalasi, pastikan Anda telah menginstal perangkat lunak berikut:
@@ -9,22 +17,18 @@ Sebelum memulai instalasi, pastikan Anda telah menginstal perangkat lunak beriku
 -   **Node.js** (versi 16 atau lebih baru) - [Unduh Node.js](https://nodejs.org/)
 -   **PHP** (versi 8.0 atau lebih baru) - [Unduh PHP](https://www.php.net/downloads.php)
 -   **Composer** - [Unduh Composer](https://getcomposer.org/)
--   **MySQL** atau **MariaDB** - [Unduh MySQL](https://dev.mysql.com/downloads/)
--   **Vite** - Vite akan diinstal secara otomatis sebagai bagian dari proses instalasi proyek frontend.
--   **Laravel** - Untuk backend, Laravel akan diinstal melalui Composer.
+-   **MySQL** - [Unduh MySQL](https://dev.mysql.com/downloads/)
 
 ## Langkah Instalasi
-
-### 1. Menyiapkan Backend (Laravel)
 
 1. **Clone repositori proyek**:
 
     ```bash
-    git clone https://github.com/username/repository-name.git
+    git clone https://github.com/alfrzaa/RajaPharma-by-Kelompok-1.git
     cd repository-name
     ```
 
-2. **Instal dependensi backend menggunakan Composer**:
+2. **Instal dependensi menggunakan Composer untuk Laravel**:
 
     ```bash
     composer install
@@ -45,57 +49,45 @@ Sebelum memulai instalasi, pastikan Anda telah menginstal perangkat lunak beriku
     ```
 
 5. **Migrasi database**:
-   Pastikan database Anda telah disiapkan dan tabel sudah ada.
+   Pastikan database Anda telah disiapkan dan disesuaikan pada file `.env`.
 
     ```bash
     php artisan migrate
     ```
 
-6. **Jalankan server Laravel**:
-   Untuk menjalankan backend Laravel, gunakan perintah berikut:
-    ```bash
-    php artisan serve
-    ```
-    Server Laravel akan berjalan di `http://localhost:8000`.
-
-### 2. Menyiapkan Frontend (React dengan Vite dan Inertia.js)
-
-1. **Masuk ke direktori frontend**:
-
-    ```bash
-    cd frontend
-    ```
-
-2. **Instal dependensi frontend menggunakan npm**:
-   Jika Anda belum menginstal dependensi, jalankan:
+6. **Instal dependensi frontend menggunakan npm**:
 
     ```bash
     npm install
     ```
 
-3. **Menyiapkan file konfigurasi Inertia.js**:
-   Pastikan bahwa Anda telah mengonfigurasi Inertia.js dengan benar untuk berkomunikasi dengan backend Laravel. Anda harus mengatur **`inertia.js`** di frontend untuk menangani routing.
+7. **Menjalankan aplikasi**:
+   Untuk menjalankan aplikasi, buka dua terminal:
 
-4. **Menjalankan server Vite**:
-   Untuk menjalankan frontend menggunakan Vite, jalankan perintah berikut di folder `frontend`:
-    ```bash
-    npm run dev
-    ```
-    Frontend React akan berjalan di `http://localhost:3000`.
+    - Di terminal pertama, jalankan backend Laravel:
 
-### 3. Menghubungkan Backend dan Frontend
+        ```bash
+        php artisan serve
+        ```
 
-1. Pastikan API Laravel diatur untuk melayani permintaan dari frontend React. Anda mungkin perlu mengatur **CORS** (Cross-Origin Resource Sharing) untuk mengizinkan permintaan dari port yang berbeda.
-2. Pastikan Anda telah mengonfigurasi file **routes/web.php** di Laravel untuk menerima request dari Inertia.
+    - Di terminal kedua, jalankan frontend menggunakan Vite:
 
-3. Periksa konfigurasi Inertia.js pada frontend React dan pastikan Anda mengonfigurasi `InertiaApp` dengan benar agar bisa bekerja dengan Laravel.
+        ```bash
+        npm run dev
+        ```
+
+    - Atau bisa juga dengan menjalankan kedua command diatas secara bersamaan menggunakan:
+        ```bash
+        npm run start
+        ```
+
+    **Catatan**: Karena menggunakan **Inertia.js**, frontend dan backend sudah terhubung otomatis saat mengakses `http://127.0.0.1:8000`.
 
 ### 4. Pengujian
 
 Setelah semua langkah di atas selesai, buka aplikasi Anda melalui browser dengan alamat berikut:
 
--   Backend: `http://localhost:8000`
--   Frontend: `http://localhost:3000`
+-   **Frontend + Backend**: `http://127.0.0.1:8000`
 
 Lakukan pengujian untuk memastikan semuanya bekerja dengan baik, mulai dari login, transaksi, pengelolaan stok, hingga pembuatan laporan.
 
@@ -111,7 +103,7 @@ npm run build
 
 Perintah ini akan membuat versi produksi dari aplikasi React dan menempatkan file di dalam folder `dist`.
 
-### 2. Menyebarkan Backend Laravel
+### 2. Menyebarkan Backend dan Frontend (terhubung otomatis)
 
 1. **Deploy Laravel ke server**:
    Anda dapat meng-host aplikasi Laravel di server menggunakan layanan hosting seperti **DigitalOcean**, **Vultr**, **AWS**, atau layanan lain yang mendukung PHP dan Laravel. Anda bisa menggunakan **Forge** atau mengonfigurasi server secara manual.
@@ -140,9 +132,6 @@ Perintah ini akan membuat versi produksi dari aplikasi React dan menempatkan fil
     php artisan route:cache
     php artisan view:cache
     ```
-
-6. **Setel Nginx/Apache untuk melayani aplikasi**:
-   Sesuaikan konfigurasi server web seperti Nginx atau Apache untuk melayani aplikasi Laravel di server produksi.
 
 ### 3. Deploy Frontend
 
