@@ -220,6 +220,15 @@ const StockManagement = ({ medications }) => {
                         <h1 className="text-2xl font-semibold text-gray-800">
                             Manajemen Stok Obat
                         </h1>
+                        <div className="flex items-center">
+                            <div className="flex items-center">
+                                <div className="text-right">
+                                    <div className="text-sm font-semibold text-gray-800">
+                                        Administrator RajaPharma
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
@@ -301,6 +310,7 @@ const StockManagement = ({ medications }) => {
                                         </th>
                                     </tr>
                                 </thead>
+
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {filteredMedications.length > 0 ? (
                                         filteredMedications.map(
@@ -338,32 +348,35 @@ const StockManagement = ({ medications }) => {
                                                         {medication.supplier}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                                                        <button
-                                                            disabled={
-                                                                isSubmitting
-                                                            }
-                                                            onClick={() =>
-                                                                handleEditMedication(
-                                                                    medication
-                                                                )
-                                                            }
-                                                            className="text-blue-500 hover:text-blue-700 disabled:text-gray-400"
-                                                        >
-                                                            <Edit size={16} />
-                                                        </button>
-                                                        <button
-                                                            disabled={
-                                                                isSubmitting
-                                                            }
-                                                            onClick={() =>
-                                                                handleDeleteMedication(
-                                                                    medication
-                                                                )
-                                                            }
-                                                            className="text-red-500 hover:text-red-700 disabled:text-gray-400"
-                                                        >
-                                                            <Trash2 size={16} />
-                                                        </button>
+                                                        <div className="flex justify-center space-x-1">
+                                                            {/* Edit and Delete Buttons */}
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleEditMedication(
+                                                                        medication
+                                                                    )
+                                                                }
+                                                                className="p-2 text-[#1A6291] hover:text-[#134b73] hover:bg-blue-50 rounded-lg transition-colors"
+                                                                title="Edit Obat"
+                                                            >
+                                                                <Edit
+                                                                    size={16}
+                                                                />
+                                                            </button>
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleDeleteMedication(
+                                                                        medication
+                                                                    )
+                                                                }
+                                                                className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+                                                                title="Hapus Obat"
+                                                            >
+                                                                <Trash2
+                                                                    size={16}
+                                                                />
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             )

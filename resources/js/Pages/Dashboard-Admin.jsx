@@ -42,12 +42,10 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
 
     const { props } = usePage();
     const loginSuccessMessage = props.loginSuccessMessage;
-
-    console.log("Login Success Message from Props:", loginSuccessMessage); // Verifikasi apakah data diterima
-
     if (loginSuccessMessage) {
         toast.success(loginSuccessMessage); // Notifikasi berhasil
     }
+
     const confirmRestock = () => {
         if (restockModal.item && restockAmount && !isProcessing) {
             setIsProcessing(true);

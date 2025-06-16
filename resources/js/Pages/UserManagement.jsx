@@ -344,22 +344,20 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                                         : "-"}
                                                 </span>
                                             </td>
+
+                                            {/* Menampilkan status berdasarkan status yang ada di database */}
                                             <td className="px-6 py-4">
-                                                {/* Menampilkan status berdasarkan status yang ada di database */}
-                                                <td className="px-6 py-4">
-                                                    <span
-                                                        className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                                            user.status ===
-                                                            "Aktif"
-                                                                ? "bg-green-100 text-green-800 border border-green-200"
-                                                                : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                                                        }`}
-                                                    >
-                                                        {user.status === "Aktif"
-                                                            ? "Aktif"
-                                                            : "Offline"}
-                                                    </span>
-                                                </td>
+                                                <span
+                                                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                                                        user.status === "Aktif"
+                                                            ? "bg-green-100 text-green-800 border border-green-200"
+                                                            : "bg-yellow-100 text-yellow-800 border border-yellow-200"
+                                                    }`}
+                                                >
+                                                    {user.status === "Aktif"
+                                                        ? "Aktif"
+                                                        : "Offline"}
+                                                </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex justify-center space-x-2">
@@ -499,6 +497,7 @@ const UserManagement = ({ users = [], currentUserId }) => {
                                             className="px-4 py-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-[#1A6291] focus:border-transparent"
                                             value={userForm.role}
                                             onChange={handleUserFormChange}
+                                            disabled={userForm.id}
                                         >
                                             <option value="Admin">Admin</option>
                                             <option value="Kasir">Kasir</option>

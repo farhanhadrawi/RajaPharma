@@ -4,7 +4,9 @@ import medicine from "../assets/medicine1.png";
 import { Inertia } from "@inertiajs/inertia";
 
 // Logo component
-const Logo = () => <img src={logo} alt="RajaPharma Logo" className="h-30" />;
+const Logo = () => (
+    <img src={logo} alt="RajaPharma Logo" className="h-24 mx-auto md:mx-10" />
+);
 
 // Landing Page Component
 const LandingPage = ({ onNavigateToLogin }) => {
@@ -13,9 +15,9 @@ const LandingPage = ({ onNavigateToLogin }) => {
             <div className="w-full flex flex-col md:flex-row">
                 {/* Left content */}
                 <div className="w-full md:w-1/2 p-12 flex flex-col justify-center">
-                    <div className="mb-2">
+                    {/* <div className="mb-4">
                         <Logo />
-                    </div>
+                    </div> */}
 
                     <div>
                         <h1 className="text-5xl font-bold text-[#1A6291] ml-8">
@@ -23,9 +25,12 @@ const LandingPage = ({ onNavigateToLogin }) => {
                         </h1>
 
                         <p className="text-lg text-gray-800 ml-8 mb-4">
+                            <br />
                             Ayo beralih ke Rajapharma dan jadikan
                             <br />
                             manajemen apotik Anda lebih gesit! 🚀
+                            <br />
+                            <br />
                         </p>
 
                         <button

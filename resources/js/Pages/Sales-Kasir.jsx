@@ -241,10 +241,14 @@ const SalesPage = ({ products = [] }) => {
                         <h1 className="text-2xl font-bold text-gray-800">
                             Penjualan Obat
                         </h1>
-                        <div className="flex items-center space-x-4">
-                            <span className="text-gray-600">
-                                Kasir RajaPharma
-                            </span>
+                        <div className="flex items-center">
+                            <div className="flex items-center">
+                                <div className="text-right">
+                                    <div className="text-sm font-semibold text-gray-800">
+                                        Administrator RajaPharma
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
