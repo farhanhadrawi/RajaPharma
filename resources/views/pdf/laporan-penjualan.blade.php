@@ -31,7 +31,7 @@
                             {{ $item->name }} (x{{ $item->quantity }})<br>
                         @endforeach
                     </td>
-                    <td>Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
+                    <td>Rp{{ number_format($trx->total_amount, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>

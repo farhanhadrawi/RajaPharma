@@ -198,11 +198,9 @@ const UserManagement = ({ users = [], currentUserId }) => {
                         <div className="flex items-center">
                             <div className="flex items-center">
                                 <div className="text-right">
-                                    <p className="font-semibold text-[#1A6291]">
-                                        {currentUserId
-                                            ? currentUserId.name
-                                            : "Pengguna Tidak Ditemukan"}
-                                    </p>
+                                    <div className="text-sm font-semibold text-gray-800">
+                                        Administrator RajaPharma
+                                    </div>
                                 </div>
                             </div>
                         </div>

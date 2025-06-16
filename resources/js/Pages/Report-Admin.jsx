@@ -598,7 +598,10 @@ const ReportAdmin = () => {
                                             <span>
                                                 {selectedTransaction.items.reduce(
                                                     (sum, item) =>
-                                                        sum + item.quantity,
+                                                        sum +
+                                                        (Number(
+                                                            item.quantity
+                                                        ) || 0), // Pastikan item.quantity menjadi angka
                                                     0
                                                 )}{" "}
                                                 item
@@ -616,7 +619,7 @@ const ReportAdmin = () => {
                                         </div>
                                         <hr className="border-gray-200" />
                                         <div className="flex justify-between text-lg font-bold text-gray-900">
-                                            <span>Total Pembayaran</span>
+                                            <span>Total Harga</span>
                                             <span>
                                                 Rp
                                                 {formatCurrency(
