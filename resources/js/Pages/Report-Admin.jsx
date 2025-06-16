@@ -463,9 +463,9 @@ const ReportAdmin = () => {
             {/* Transaction Detail Modal */}
             {showTransactionDetail && selectedTransaction && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl">
-                        {/* Modal Header */}
-                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <div className="bg-white rounded-lg max-w-4xl w-full h-[90vh] flex flex-col shadow-2xl">
+                        {/* Modal Header - Fixed */}
+                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex-shrink-0">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-xl font-bold text-gray-900">
                                     Detail Transaksi {selectedTransaction.id}
@@ -481,105 +481,152 @@ const ReportAdmin = () => {
                             </div>
                         </div>
 
-                        {/* Modal Content */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
-                            {/* Transaction Info */}
-                            <div className="mb-6">
-                                <div className="grid grid-cols-2 gap-4 text-sm">
-                                    <div>
-                                        <span className="text-gray-600 font-medium">
-                                            Tanggal & Waktu
-                                        </span>
-                                        <p className="text-gray-900 font-semibold mt-2">
-                                            {selectedTransaction.date}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <span className="text-gray-600 font-medium">
-                                            Kasir
-                                        </span>
-                                        <p className="text-gray-900 font-semibold mt-2">
-                                            {selectedTransaction.cashier}
-                                        </p>
+                        {/* Modal Content - Scrollable */}
+                        <div className="flex-1 overflow-y-auto">
+                            <div className="p-6">
+                                {/* Transaction Info */}
+                                <div className="mb-6">
+                                    <div className="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <span className="text-gray-600 font-medium">
+                                                Tanggal & Waktu
+                                            </span>
+                                            <p className="text-gray-900 font-semibold mt-2">
+                                                {selectedTransaction.date}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-600 font-medium">
+                                                Kasir
+                                            </span>
+                                            <p className="text-gray-900 font-semibold mt-2">
+                                                {selectedTransaction.cashier}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Items Table */}
-                            <div className="mb-6">
-                                <div className="overflow-hidden border border-gray-200 rounded-lg">
-                                    <table className="w-full text-sm">
-                                        <thead className="bg-gray-50">
-                                            <tr>
-                                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                                                    Produk
-                                                </th>
-                                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">
-                                                    Kategori
-                                                </th>
-                                                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">
-                                                    Harga
-                                                </th>
-                                                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">
-                                                    Jumlah
-                                                </th>
-                                                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">
-                                                    Subtotal
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
-                                            {selectedTransaction.items.map(
-                                                (item) => (
-                                                    <tr key={item.id}>
-                                                        <td className="px-4 py-3 text-gray-900 font-medium">
-                                                            {item.name}
-                                                        </td>
-                                                        <td className="px-4 py-3 text-gray-600">
-                                                            {getItemCategory(
-                                                                item.name
-                                                            )}
-                                                        </td>
-                                                        <td className="px-4 py-3 text-right text-gray-900">
-                                                            Rp
-                                                            {formatCurrency(
-                                                                item.price
-                                                            )}
-                                                        </td>
-                                                        <td className="px-4 py-3 text-right text-gray-900">
-                                                            {item.quantity}
-                                                        </td>
-                                                        <td className="px-4 py-3 text-right text-gray-900 font-medium">
-                                                            Rp
-                                                            {formatCurrency(
-                                                                item.price *
-                                                                    item.quantity
-                                                            )}
-                                                        </td>
+                                {/* Items Table */}
+                                <div className="mb-6">
+                                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                                        Daftar Produk
+                                    </h4>
+                                    <div className="overflow-hidden border border-gray-200 rounded-lg">
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-sm min-w-full">
+                                                <thead className="bg-gray-50">
+                                                    <tr>
+                                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+                                                            Produk
+                                                        </th>
+                                                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+                                                            Kategori
+                                                        </th>
+                                                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+                                                            Harga
+                                                        </th>
+                                                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+                                                            Jumlah
+                                                        </th>
+                                                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+                                                            Subtotal
+                                                        </th>
                                                     </tr>
-                                                )
-                                            )}
-                                        </tbody>
-                                    </table>
+                                                </thead>
+                                                <tbody className="bg-white divide-y divide-gray-200">
+                                                    {selectedTransaction.items.map(
+                                                        (item) => (
+                                                            <tr
+                                                                key={item.id}
+                                                                className="hover:bg-gray-50"
+                                                            >
+                                                                <td className="px-4 py-4 text-gray-900 font-medium">
+                                                                    <div className="max-w-xs">
+                                                                        <p className="font-medium text-gray-900 break-words">
+                                                                            {
+                                                                                item.name
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-4 py-4 text-gray-600 whitespace-nowrap">
+                                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                        {getItemCategory(
+                                                                            item.name
+                                                                        )}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-4 py-4 text-right text-gray-900 whitespace-nowrap">
+                                                                    Rp
+                                                                    {formatCurrency(
+                                                                        item.price
+                                                                    )}
+                                                                </td>
+                                                                <td className="px-4 py-4 text-right text-gray-900 whitespace-nowrap">
+                                                                    {
+                                                                        item.quantity
+                                                                    }
+                                                                </td>
+                                                                <td className="px-4 py-4 text-right text-gray-900 font-medium whitespace-nowrap">
+                                                                    Rp
+                                                                    {formatCurrency(
+                                                                        item.price *
+                                                                            item.quantity
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Totals */}
-                            <div className="space-y-2 mb-6">
-                                <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t">
-                                    <span>Total</span>
-                                    <span>
-                                        Rp
-                                        {formatCurrency(
-                                            selectedTransaction.total
-                                        )}
-                                    </span>
+                                {/* Summary Section */}
+                                <div className="bg-gray-50 rounded-lg p-6">
+                                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                                        Ringkasan Transaksi
+                                    </h4>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between text-sm text-gray-600">
+                                            <span>Jumlah Item</span>
+                                            <span>
+                                                {selectedTransaction.items.reduce(
+                                                    (sum, item) =>
+                                                        sum + item.quantity,
+                                                    0
+                                                )}{" "}
+                                                item
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-600">
+                                            <span>Jenis Produk</span>
+                                            <span>
+                                                {
+                                                    selectedTransaction.items
+                                                        .length
+                                                }{" "}
+                                                produk
+                                            </span>
+                                        </div>
+                                        <hr className="border-gray-200" />
+                                        <div className="flex justify-between text-lg font-bold text-gray-900">
+                                            <span>Total Pembayaran</span>
+                                            <span>
+                                                Rp
+                                                {formatCurrency(
+                                                    selectedTransaction.total
+                                                )}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Modal Footer */}
-                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                        {/* Modal Footer - Fixed */}
+                        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex-shrink-0">
                             <div className="flex justify-end">
                                 <button
                                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"

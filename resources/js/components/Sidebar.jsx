@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Menu,
     Home,
@@ -50,6 +50,19 @@ const Sidebar = ({
     setActiveMenu,
     role = "admin", // default role
 }) => {
+    // State untuk modal konfirmasi logout
+    const [showModal, setShowModal] = useState(false);
+
+    // Fungsi untuk membuka modal
+    const openLogoutModal = () => {
+        setShowModal(true);
+    };
+
+    // Fungsi untuk menutup modal
+    const closeLogoutModal = () => {
+        setShowModal(false);
+    };
+
     return (
         <div
             className={`bg-[#1A6291] text-white ${
@@ -169,7 +182,7 @@ const Sidebar = ({
             {/* Footer - Logout */}
             <div className="mt-auto mb-4">
                 <button
-                    onClick={handleLogout}
+                    onClick={openLogoutModal}
                     className="w-full text-left px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer"
                 >
                     <div className="w-8 flex justify-center">
@@ -178,6 +191,32 @@ const Sidebar = ({
                     {sidebarOpen && <span className="ml-3">Keluar</span>}
                 </button>
             </div>
+
+            {/* Modal Konfirmasi Logout */}
+            {showModal && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded-md w-1/3">
+                        <h3 className="text-lg font-semibold mb-4 text-black">
+                            Apakah Anda yakin ingin logout?
+                        </h3>
+                        <div className="flex justify-end gap-4">
+                            <button
+                                onClick={closeLogoutModal}
+                                className="px-4 py-2 bg-gray-300 rounded-md"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2 bg-red-500 text-white rounded-md"
+                            >
+                                Ya, Keluar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <ToastContainer position="top-right" autoClose={5000} />
         </div>
     );

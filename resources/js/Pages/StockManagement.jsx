@@ -38,12 +38,25 @@ const StockManagement = ({ medications }) => {
     const categories = [...new Set(medications.map((item) => item.category))];
 
     // Filter medications berdasarkan search term dan kategori
-    const filteredMedications = medications.filter((medication) => {
-        return (
-            medication.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (filterCategory === "" || medication.category === filterCategory)
-        );
-    });
+    const filteredMedications = medications
+        .filter((medication) => {
+            return (
+                medication.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) &&
+                (filterCategory === "" ||
+                    medication.category === filterCategory)
+            );
+        })
+        .sort((a, b) => {
+            // First, sort by name alphabetically
+            const nameComparison = a.name.localeCompare(b.name);
+            if (nameComparison !== 0) {
+                return nameComparison;
+            }
+            // If names are the same, sort by category
+            return a.category.localeCompare(b.category);
+        });
 
     const handleAddMedication = () => {
         setCurrentMedication(null);
