@@ -230,7 +230,7 @@ const StockManagement = ({ medications }) => {
             <div className="flex-1 flex flex-col overflow-hidden">
                 <header className="bg-white shadow-sm">
                     <div className="flex items-center justify-between p-4">
-                        <h1 className="text-2xl font-semibold text-gray-800">
+                        <h1 className="text-2xl font-bold text-gray-800">
                             Manajemen Stok Obat
                         </h1>
                         <div className="flex items-center">

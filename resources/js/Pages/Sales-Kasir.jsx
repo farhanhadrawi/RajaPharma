@@ -589,12 +589,12 @@ const SalesPage = ({ products = [] }) => {
                                             Subtotal
                                         </span>
                                         <span>
-                                            Rp {formatCurrency(subtotal)}
+                                            Rp{formatCurrency(subtotal)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between font-bold text-lg">
                                         <span>Total</span>
-                                        <span>Rp {formatCurrency(total)}</span>
+                                        <span>Rp{formatCurrency(total)}</span>
                                     </div>
                                 </div>
 
@@ -632,7 +632,7 @@ const SalesPage = ({ products = [] }) => {
                                     Total Pembayaran
                                 </span>
                                 <span className="font-bold text-lg">
-                                    Rp {formatCurrency(total)}
+                                    Rp{formatCurrency(total)}
                                 </span>
                             </div>
 
@@ -672,7 +672,7 @@ const SalesPage = ({ products = [] }) => {
                                             setCashAmount(amount.toString())
                                         }
                                     >
-                                        Rp {formatCurrency(amount)}
+                                        Rp{formatCurrency(amount)}
                                     </button>
                                 ))}
                             </div>

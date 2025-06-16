@@ -150,9 +150,9 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
                 <header className="bg-white shadow-sm border-b-2 border-[#1A6291]">
                     <div className="flex items-center justify-between p-4">
                         <div className="flex items-center">
-                            <h1 className="text-2xl font-semibold text-gray-800">
+                            <h1 className="text-2xl font-bold text-gray-800 font-bold">
                                 Dashboard
-                            </h1>
+                            </h1>{" "}
                         </div>
 
                         <div className="flex items-center">

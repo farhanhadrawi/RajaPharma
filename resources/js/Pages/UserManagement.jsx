@@ -190,25 +190,24 @@ const UserManagement = ({ users = [], currentUserId }) => {
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
-                {/* Header */}
-                <div className="bg-white shadow-sm border-b-2 border-[#1A6291]">
-                    <div className="p-6 flex justify-between items-center">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-800">
-                                Manajemen Pengguna
-                            </h1>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <div className="text-right">
-                                <p className="font-semibold text-[#1A6291]">
-                                    {currentUserId
-                                        ? currentUserId.name
-                                        : "Pengguna Tidak Ditemukan"}
-                                </p>
+                <header className="bg-white shadow-sm">
+                    <div className="flex items-center justify-between p-4">
+                        <h1 className="text-2xl font-bold text-gray-800">
+                            Manajemen Stok Obat
+                        </h1>
+                        <div className="flex items-center">
+                            <div className="flex items-center">
+                                <div className="text-right">
+                                    <p className="font-semibold text-[#1A6291]">
+                                        {currentUserId
+                                            ? currentUserId.name
+                                            : "Pengguna Tidak Ditemukan"}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </header>
 
                 {/* Content */}
                 <div className="flex-1 p-6 overflow-auto">

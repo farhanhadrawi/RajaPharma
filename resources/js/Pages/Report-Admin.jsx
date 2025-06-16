@@ -158,7 +158,7 @@ const ReportAdmin = () => {
                 <div className="bg-white shadow-sm z-10">
                     <div className="p-4 flex justify-between items-center">
                         <h1 className="text-2xl font-bold text-gray-800">
-                            {getPageTitle()}
+                            Laporan Penjualan
                         </h1>
                         <div className="flex items-center">
                             <div className="flex items-center">
