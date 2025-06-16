@@ -474,7 +474,9 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
                                         <p className="text-sm text-green-700">
                                             Stok setelah restok:{" "}
                                             <span className="font-bold">
-                                                {restockModal.item?.stock +
+                                                {Number(
+                                                    restockModal.item?.stock
+                                                ) +
                                                     parseInt(
                                                         restockAmount || 0
                                                     )}

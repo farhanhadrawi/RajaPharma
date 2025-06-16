@@ -9,19 +9,26 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('transaction_items', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('obats');
+
+            // Ubah jadi nullable dan set null saat obat dihapus
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->foreign('product_id')
+                  ->references('id')
+                  ->on('obats')
+                  ->onDelete('set null');
+
             $table->integer('quantity');
             $table->integer('price');
             $table->timestamps();
         });
-        
     }
-    
+
     /**
      * Reverse the migrations.
      */
