@@ -77,12 +77,13 @@ const StockManagement = ({ medications }) => {
         setFormData({
             name: medication.name,
             category: medication.category,
-            stock: medication.stock.toString(),
-            minStock: medication.minStock.toString(),
-            price: medication.price.toString(),
+            stock: Number(medication.stock).toFixed(0),
+            minStock: Number(medication.minStock).toFixed(0),
+            price: Number(medication.price).toFixed(0),
             expiryDate: medication.expiryDate,
             supplier: medication.supplier,
         });
+
         setShowAddModal(true);
     };
 

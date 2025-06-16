@@ -114,8 +114,9 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
     }));
 
     const currentLowStockItems = stockItems.filter(
-        (item) => item.stock < item.minStock
+        (item) => Number(item.stock) < Number(item.minStock)
     );
+    console.table(stockItems); // Cek apakah stock dan minStock adalah string
 
     const currentExpiringItems = (expiringItems || [])
         .filter((item) => item.remainingDays <= 60)
