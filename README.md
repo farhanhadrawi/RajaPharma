@@ -29,8 +29,8 @@ Pastikan Anda telah menginstal:
 
 1. **Clone repositori proyek**
    ```bash
-   git clone https://github.com/alfrzaa/RajaPharma-by-Kelompok-1.git
-   cd RajaPharma-by-Kelompok-1
+   git clone https://github.com/farhanhadrawi/RajaPharma.git
+   cd RajaPharma
    ```
 
 2. **Instal dependensi Laravel**
